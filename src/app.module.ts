@@ -5,7 +5,10 @@ import { SkitsModule } from './skits/skits.module';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Skit } from './skits/entities/skit.entity';
-import { UserInfoModule } from './user-info/user-info.module';
+import { UserDetails } from './users/entities/user-details.entity';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -17,9 +20,11 @@ import { UserInfoModule } from './user-info/user-info.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Skit],
+      models: [Skit, UserDetails, User],
     }),
     SkitsModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
