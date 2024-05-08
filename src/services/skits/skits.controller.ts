@@ -11,7 +11,7 @@ import {
 import { SkitsService } from './skits.service';
 import { CreateSkitDto } from './dto/create-skit.dto';
 import { UpdateSkitDto } from './dto/update-skit.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from 'src/services/auth/auth.guard';
 
 @Controller('skits')
 export class SkitsController {
@@ -19,30 +19,30 @@ export class SkitsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createSkitDto: CreateSkitDto) {
-    return this.skitsService.create(createSkitDto);
+  createSkit(@Body() createSkitDto: CreateSkitDto) {
+    return this.skitsService.createSkit(createSkitDto);
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.skitsService.findAll();
+  getAllSkits() {
+    return this.skitsService.getAllSkits();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.skitsService.findOne(id);
+  getSkit(@Param('id') id: string) {
+    return this.skitsService.getSkit(id);
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSkitDto: UpdateSkitDto) {
-    return this.skitsService.update(id, updateSkitDto);
+  updateSkit(@Param('id') id: string, @Body() updateSkitDto: UpdateSkitDto) {
+    return this.skitsService.updateSkit(id, updateSkitDto);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.skitsService.remove(id);
+  deleteSkit(@Param('id') id: string) {
+    return this.skitsService.deleteSkit(id);
   }
 }

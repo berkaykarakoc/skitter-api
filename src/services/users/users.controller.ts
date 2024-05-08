@@ -11,7 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from 'src/services/auth/auth.guard';
 import { CreateUserDetailsDto } from './dto/create-user-details.dto';
 import { UpdateUserDetailsDto } from './dto/update-user-details.dto';
 

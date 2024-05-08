@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { SkitsModule } from './skits/skits.module';
+import { SkitsModule } from './services/skits/skits.module';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Skit } from './skits/entities/skit.entity';
-import { UserDetails } from './users/entities/user-details.entity';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
+import { Skit } from './services/skits/entities/skit.entity';
+import { UserDetails } from './services/users/entities/user-details.entity';
+import { AuthModule } from './services/auth/auth.module';
+import { UsersModule } from './services/users/users.module';
+import { User } from './services/users/entities/user.entity';
 
 @Module({
   imports: [

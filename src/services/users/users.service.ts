@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/sequelize';
-import { hashPassword } from 'utils/hash-password.util';
+import { hashPassword } from 'src/utils/hash-password.util';
 import { UserDetails } from './entities/user-details.entity';
 import { CreateUserDetailsDto } from './dto/create-user-details.dto';
 import { UpdateUserDetailsDto } from './dto/update-user-details.dto';

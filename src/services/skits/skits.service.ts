@@ -11,28 +11,31 @@ export class SkitsService {
     private skitsRepository: typeof Skit,
   ) {}
 
-  async create(createSkitDto: CreateSkitDto) {
+  async createSkit(createSkitDto: CreateSkitDto): Promise<{ skitId: string }> {
     const skit = await this.skitsRepository.create({
       userId: createSkitDto.userId,
       text: createSkitDto.text,
       totalLikes: createSkitDto.totalLikes,
     });
-    return skit.id;
+    return { skitId: skit.id };
   }
 
-  async findAll(): Promise<Skit[]> {
+  async getAllSkits(): Promise<Skit[]> {
     return this.skitsRepository.findAll();
   }
 
-  async findOne(id: string): Promise<Skit | null> {
-    return this.skitsRepository.findOne({
-      where: {
-        id,
-      },
-    });
+  async getSkit(id: string): Promise<Skit> {
+    const skit = await this.skitsRepository.findByPk(id);
+    if (!skit) {
+      throw new NotFoundException(`Skit ${id} not found`);
+    }
+    return skit;
   }
 
-  async update(id: string, updateSkitDto: UpdateSkitDto) {
+  async updateSkit(
+    id: string,
+    updateSkitDto: UpdateSkitDto,
+  ): Promise<[affectedCount: number]> {
     return this.skitsRepository.update(
       {
         userId: updateSkitDto.userId,
@@ -47,11 +50,8 @@ export class SkitsService {
     );
   }
 
-  async remove(id: string): Promise<void> {
-    const skit = await this.findOne(id);
-    if (!skit) {
-      throw new NotFoundException(`Skit with id ${id} not found`);
-    }
+  async deleteSkit(id: string): Promise<void> {
+    const skit = await this.getSkit(id);
     await skit.destroy();
   }
 }
