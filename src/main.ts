@@ -1,10 +1,11 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { AllExceptionsFilter, HttpExceptionFilter } from './filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const adapterHost = app.get(HttpAdapterHost);
   app.setGlobalPrefix('api');
   app.enableCors({
     origin: '*',
@@ -17,6 +18,7 @@ async function bootstrap() {
     preflightContinue: false,
   });
   app.use(cookieParser());
+  app.useGlobalFilters(new AllExceptionsFilter(adapterHost));
   app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(process.env.PORT || 3000);
 }
