@@ -1,5 +1,12 @@
 import { DateDataType } from 'sequelize';
-import { Column, Table, Model, Default, Unique } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  Model,
+  Default,
+  Unique,
+  PrimaryKey,
+} from 'sequelize-typescript';
 
 @Table({
   tableName: 'user_details',
@@ -7,7 +14,7 @@ import { Column, Table, Model, Default, Unique } from 'sequelize-typescript';
   underscored: true,
 })
 export class UserDetails extends Model {
-  @Unique
+  @PrimaryKey
   @Column('username')
   username: string;
 

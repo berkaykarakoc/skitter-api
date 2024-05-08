@@ -20,23 +20,26 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserInfoDto: CreateUserDto) {
-    return this.usersService.create(createUserInfoDto);
+  createUser(@Body() createUserInfoDto: CreateUserDto) {
+    return this.usersService.createUser(createUserInfoDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  @Get(':username')
+  getUser(@Param('username') username: string) {
+    return this.usersService.getUser(username);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserInfoDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserInfoDto);
+  @Patch(':username')
+  updateUser(
+    @Param('username') username: string,
+    @Body() updateUserInfoDto: UpdateUserDto,
+  ) {
+    return this.usersService.updateUser(username, updateUserInfoDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  @Delete(':username')
+  deleteUser(@Param('username') username: string) {
+    return this.usersService.deleteUser(username);
   }
 
   @UseGuards(AuthGuard)
@@ -46,23 +49,24 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
-  @Get(':id/details')
-  findOneUserDetails(@Param('id') id: string) {
-    return this.usersService.findOneUserDetails(id);
+  @Get(':username/details')
+  async getUserDetails(@Param('username') username: string) {
+    const userDetails = await this.usersService.getUserDetails(username);
+    return userDetails;
   }
 
   @UseGuards(AuthGuard)
-  @Patch(':id/details')
+  @Patch(':username/details')
   updateUserDetails(
-    @Param('id') id: string,
+    @Param('username') username: string,
     @Body() updateUserInfoDto: UpdateUserDetailsDto,
   ) {
-    return this.usersService.updateUserDetails(id, updateUserInfoDto);
+    return this.usersService.updateUserDetails(username, updateUserInfoDto);
   }
 
   @UseGuards(AuthGuard)
-  @Delete(':id/details')
-  removeUserDetails(@Param('id') id: string) {
-    return this.usersService.removeUserDetails(id);
+  @Delete(':username/details')
+  deleteUserDetails(@Param('username') username: string) {
+    return this.usersService.deleteUserDetails(username);
   }
 }

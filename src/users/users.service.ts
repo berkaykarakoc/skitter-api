@@ -17,32 +17,33 @@ export class UsersService {
     private userDetailsRepository: typeof UserDetails,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async createUser(
+    createUserDto: CreateUserDto,
+  ): Promise<{ username: string }> {
     const user = await this.userRepository.create({
       username: createUserDto.username,
       password: await hashPassword(createUserDto.password),
       email: createUserDto.email,
     });
-    return user.id;
-  }
-
-  async findOne(id: string): Promise<User | null> {
-    return this.userRepository.findOne({
-      where: {
-        id,
-      },
+    await this.createUserDetails({
+      username: createUserDto.username,
+      email: createUserDto.email,
     });
+    return { username: user.username };
   }
 
-  async findOneByUsername(username: string): Promise<User | null> {
-    return this.userRepository.findOne({
-      where: {
-        username,
-      },
-    });
+  async getUser(username: string): Promise<User> {
+    const user = await this.userRepository.findByPk(username);
+    if (!user) {
+      throw new NotFoundException(`User ${username} not found`);
+    }
+    return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async updateUser(
+    username: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<[affectedCount: number]> {
     return this.userRepository.update(
       {
         username: updateUserDto.username,
@@ -51,23 +52,22 @@ export class UsersService {
       },
       {
         where: {
-          id,
+          username,
         },
       },
     );
   }
 
-  async remove(id: string) {
-    const user = await this.findOne(id);
-    if (!user) {
-      throw new NotFoundException(`User Info with id ${id} not found`);
-    }
+  async deleteUser(username: string): Promise<void> {
+    const user = await this.getUser(username);
     await user.destroy();
+    await this.deleteUserDetails(username);
   }
 
-  async createUserDetails(createUserDetailsDto: CreateUserDetailsDto) {
-    const userDetails = await this.userDetailsRepository.create({
-      id: createUserDetailsDto.id,
+  async createUserDetails(
+    createUserDetailsDto: CreateUserDetailsDto,
+  ): Promise<void> {
+    await this.userDetailsRepository.create({
       username: createUserDetailsDto.username,
       email: createUserDetailsDto.email,
       firstName: createUserDetailsDto.firstName,
@@ -76,21 +76,20 @@ export class UsersService {
       country: createUserDetailsDto.country,
       totalFollowers: createUserDetailsDto.totalFollowers,
     });
-    return userDetails.id;
   }
 
-  async findOneUserDetails(id: string): Promise<UserDetails | null> {
-    return this.userDetailsRepository.findOne({
-      where: {
-        id,
-      },
-    });
+  async getUserDetails(username: string): Promise<UserDetails> {
+    const userDetails = await this.userDetailsRepository.findByPk(username);
+    if (!userDetails) {
+      throw new NotFoundException(`User Details ${username} not found`);
+    }
+    return userDetails;
   }
 
   async updateUserDetails(
-    id: string,
+    username: string,
     updateUserDetailsDto: UpdateUserDetailsDto,
-  ) {
+  ): Promise<[affectedCount: number]> {
     return this.userDetailsRepository.update(
       {
         username: updateUserDetailsDto.username,
@@ -103,17 +102,14 @@ export class UsersService {
       },
       {
         where: {
-          id,
+          username,
         },
       },
     );
   }
 
-  async removeUserDetails(id: string) {
-    const userDetails = await this.findOne(id);
-    if (!userDetails) {
-      throw new NotFoundException(`User Info with id ${id} not found`);
-    }
+  async deleteUserDetails(username: string): Promise<void> {
+    const userDetails = await this.getUserDetails(username);
     await userDetails.destroy();
   }
 }
