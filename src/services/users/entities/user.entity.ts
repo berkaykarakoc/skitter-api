@@ -1,7 +1,14 @@
-import { Column, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import { DateDataType } from 'sequelize';
+import {
+  Column,
+  Default,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
 
 @Table({
-  tableName: 'user_login',
+  tableName: 'users',
   schema: 'skitterapi',
   underscored: true,
 })
@@ -15,4 +22,20 @@ export class User extends Model {
 
   @Column('email')
   email: string;
+
+  @Column('first_name')
+  firstName: string;
+
+  @Column('last_name')
+  lastName: string;
+
+  @Column('date_of_birth')
+  dateOfBirth: DateDataType;
+
+  @Column('country')
+  country: string;
+
+  @Default(0)
+  @Column('total_followers')
+  totalFollowers: number;
 }

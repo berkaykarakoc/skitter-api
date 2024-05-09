@@ -4,16 +4,15 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
   UseGuards,
+  Request,
+  Param,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/services/auth/auth.guard';
-import { CreateUserDetailsDto } from './dto/create-user-details.dto';
-import { UpdateUserDetailsDto } from './dto/update-user-details.dto';
 
 @Controller('users')
 export class UsersController {
@@ -24,49 +23,22 @@ export class UsersController {
     return this.usersService.createUser(createUserInfoDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get(':username')
   getUser(@Param('username') username: string) {
+    console.log(username);
     return this.usersService.getUser(username);
   }
 
-  @Patch(':username')
-  updateUser(
-    @Param('username') username: string,
-    @Body() updateUserInfoDto: UpdateUserDto,
-  ) {
-    return this.usersService.updateUser(username, updateUserInfoDto);
-  }
-
-  @Delete(':username')
-  deleteUser(@Param('username') username: string) {
-    return this.usersService.deleteUser(username);
+  @UseGuards(AuthGuard)
+  @Patch()
+  updateUser(@Request() req: any, @Body() updateUserInfoDto: UpdateUserDto) {
+    return this.usersService.updateUser(req.user.username, updateUserInfoDto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('details')
-  createUserDetails(@Body() createUserDetailsDto: CreateUserDetailsDto) {
-    return this.usersService.createUserDetails(createUserDetailsDto);
-  }
-
-  @UseGuards(AuthGuard)
-  @Get(':username/details')
-  async getUserDetails(@Param('username') username: string) {
-    const userDetails = await this.usersService.getUserDetails(username);
-    return userDetails;
-  }
-
-  @UseGuards(AuthGuard)
-  @Patch(':username/details')
-  updateUserDetails(
-    @Param('username') username: string,
-    @Body() updateUserInfoDto: UpdateUserDetailsDto,
-  ) {
-    return this.usersService.updateUserDetails(username, updateUserInfoDto);
-  }
-
-  @UseGuards(AuthGuard)
-  @Delete(':username/details')
-  deleteUserDetails(@Param('username') username: string) {
-    return this.usersService.deleteUserDetails(username);
+  @Delete()
+  deleteUser(@Request() req: any) {
+    return this.usersService.deleteUser(req.user.username);
   }
 }
