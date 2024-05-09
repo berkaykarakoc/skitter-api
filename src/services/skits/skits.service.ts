@@ -11,17 +11,24 @@ export class SkitsService {
     private skitsRepository: typeof Skit,
   ) {}
 
-  async createSkit(createSkitDto: CreateSkitDto): Promise<{ skitId: string }> {
+  async createSkit(
+    createSkitDto: CreateSkitDto,
+    username: string,
+  ): Promise<{ skitId: string }> {
     const skit = await this.skitsRepository.create({
-      userId: createSkitDto.userId,
+      username,
       text: createSkitDto.text,
       totalLikes: createSkitDto.totalLikes,
     });
     return { skitId: skit.id };
   }
 
-  async getAllSkits(): Promise<Skit[]> {
-    return this.skitsRepository.findAll();
+  async getAllSkits(username: string): Promise<Skit[]> {
+    return this.skitsRepository.findAll({
+      where: {
+        username,
+      },
+    });
   }
 
   async getSkit(id: string): Promise<Skit> {
@@ -38,7 +45,7 @@ export class SkitsService {
   ): Promise<[affectedCount: number]> {
     return this.skitsRepository.update(
       {
-        userId: updateSkitDto.userId,
+        userId: updateSkitDto.username,
         text: updateSkitDto.text,
         totalLikes: updateSkitDto.totalLikes,
       },

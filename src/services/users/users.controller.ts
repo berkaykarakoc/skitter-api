@@ -26,19 +26,18 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get(':username')
   getUser(@Param('username') username: string) {
-    console.log(username);
     return this.usersService.getUser(username);
   }
 
   @UseGuards(AuthGuard)
   @Patch()
   updateUser(@Request() req: any, @Body() updateUserInfoDto: UpdateUserDto) {
-    return this.usersService.updateUser(req.user.username, updateUserInfoDto);
+    return this.usersService.updateUser(req.user.sub, updateUserInfoDto);
   }
 
   @UseGuards(AuthGuard)
   @Delete()
   deleteUser(@Request() req: any) {
-    return this.usersService.deleteUser(req.user.username);
+    return this.usersService.deleteUser(req.user.sub);
   }
 }

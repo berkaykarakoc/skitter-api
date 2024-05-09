@@ -1,5 +1,5 @@
 export class CreateSkitDto {
-  userId: string;
+  username: string;
   text: string;
   totalLikes: number;
 }

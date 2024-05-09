@@ -6,8 +6,8 @@ import { Column, Table, Model, Default } from 'sequelize-typescript';
   underscored: true,
 })
 export class Skit extends Model {
-  @Column('user_id')
-  userId: string;
+  @Column('username')
+  username: string;
 
   @Column('text')
   text: string;

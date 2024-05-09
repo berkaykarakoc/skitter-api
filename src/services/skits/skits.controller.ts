@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { SkitsService } from './skits.service';
 import { CreateSkitDto } from './dto/create-skit.dto';
@@ -19,14 +20,14 @@ export class SkitsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  createSkit(@Body() createSkitDto: CreateSkitDto) {
-    return this.skitsService.createSkit(createSkitDto);
+  createSkit(@Body() createSkitDto: CreateSkitDto, @Request() req: any) {
+    return this.skitsService.createSkit(createSkitDto, req.user.sub);
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  getAllSkits() {
-    return this.skitsService.getAllSkits();
+  getAllSkits(@Request() req: any) {
+    return this.skitsService.getAllSkits(req.user.sub);
   }
 
   @Get(':id')
