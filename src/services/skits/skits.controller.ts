@@ -20,30 +20,33 @@ export class SkitsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  createSkit(@Body() createSkitDto: CreateSkitDto, @Request() req: any) {
+  createSkitForUser(@Body() createSkitDto: CreateSkitDto, @Request() req: any) {
     return this.skitsService.createSkit(createSkitDto, req.user.sub);
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  getAllSkits(@Request() req: any) {
-    return this.skitsService.getAllSkits(req.user.sub);
+  getSkitsForUser(@Request() req: any) {
+    return this.skitsService.getSkitsForUser(req.user.sub);
   }
 
   @Get(':id')
-  getSkit(@Param('id') id: string) {
-    return this.skitsService.getSkit(id);
+  getSkitById(@Param('id') id: string) {
+    return this.skitsService.getSkitById(id);
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  updateSkit(@Param('id') id: string, @Body() updateSkitDto: UpdateSkitDto) {
-    return this.skitsService.updateSkit(id, updateSkitDto);
+  updateSkitById(
+    @Param('id') id: string,
+    @Body() updateSkitDto: UpdateSkitDto,
+  ) {
+    return this.skitsService.updateSkitById(id, updateSkitDto);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  deleteSkit(@Param('id') id: string) {
-    return this.skitsService.deleteSkit(id);
+  deleteSkitById(@Param('id') id: string) {
+    return this.skitsService.deleteSkitById(id);
   }
 }

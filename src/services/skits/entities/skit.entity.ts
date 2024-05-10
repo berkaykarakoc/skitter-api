@@ -1,4 +1,11 @@
-import { Column, Table, Model, Default } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  Model,
+  Default,
+  ForeignKey,
+} from 'sequelize-typescript';
+import { User } from 'src/services/users/entities/user.entity';
 
 @Table({
   tableName: 'skits',
@@ -6,13 +13,14 @@ import { Column, Table, Model, Default } from 'sequelize-typescript';
   underscored: true,
 })
 export class Skit extends Model {
-  @Column('username')
-  username: string;
-
   @Column('text')
   text: string;
 
   @Default(0)
   @Column('total_likes')
   totalLikes: number;
+
+  @ForeignKey(() => User)
+  @Column('user_id')
+  userId: string;
 }

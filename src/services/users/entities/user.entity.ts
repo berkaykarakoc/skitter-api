@@ -1,11 +1,13 @@
-import { DateDataType } from 'sequelize';
 import {
   Column,
-  Default,
   Model,
-  PrimaryKey,
+  Unique,
   Table,
+  HasOne,
+  HasMany,
 } from 'sequelize-typescript';
+import { Profile } from 'src/services/profiles/entities/profile.entity';
+import { Skit } from 'src/services/skits/entities/skit.entity';
 
 @Table({
   tableName: 'users',
@@ -13,7 +15,7 @@ import {
   underscored: true,
 })
 export class User extends Model {
-  @PrimaryKey
+  @Unique
   @Column('username')
   username: string;
 
@@ -23,19 +25,9 @@ export class User extends Model {
   @Column('email')
   email: string;
 
-  @Column('first_name')
-  firstName: string;
+  @HasOne(() => Profile, 'id')
+  profileId: string;
 
-  @Column('last_name')
-  lastName: string;
-
-  @Column('date_of_birth')
-  dateOfBirth: DateDataType;
-
-  @Column('country')
-  country: string;
-
-  @Default(0)
-  @Column('total_followers')
-  totalFollowers: number;
+  @HasMany(() => Skit, 'id')
+  skits: string[];
 }

@@ -4,31 +4,44 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { hashPassword } from 'src/utils/hash-password.util';
+import { ProfilesService } from '../profiles/profiles.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User)
     private userRepository: typeof User,
+    private profilesService: ProfilesService,
   ) {}
 
   async createUser(
     createUserDto: CreateUserDto,
-  ): Promise<{ username: string }> {
+  ): Promise<{ user_id: string; profile_id: string }> {
     const user = await this.userRepository.create({
       username: createUserDto.username,
-      password: await hashPassword(createUserDto.password),
+      password: await hashPassword(createUserDto.password!),
       email: createUserDto.email,
-      firstName: createUserDto.firstName,
-      lastName: createUserDto.lastName,
-      dateOfBirth: createUserDto.dateOfBirth,
-      country: createUserDto.country,
     });
-    return { username: user.username };
+    const profile = await this.profilesService.createProfile({
+      username: createUserDto.username,
+      email: createUserDto.email,
+      userId: user.id,
+    });
+    return { user_id: user.id, profile_id: profile.id };
   }
 
-  async getUser(username: string): Promise<User> {
-    const user = await this.userRepository.findByPk(username);
+  async getUser(id: string): Promise<User> {
+    const user = await this.userRepository.findByPk(id);
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { username },
+    });
     if (!user) {
       throw new NotFoundException(`User ${username} not found`);
     }
@@ -36,30 +49,21 @@ export class UsersService {
   }
 
   async updateUser(
-    username: string,
+    id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<[affectedCount: number]> {
-    return this.userRepository.update(
-      {
-        username: updateUserDto.username,
-        password: await hashPassword(updateUserDto.password!),
-        email: updateUserDto.email,
-        firstName: updateUserDto.firstName,
-        lastName: updateUserDto.lastName,
-        dateOfBirth: updateUserDto.dateOfBirth,
-        country: updateUserDto.country,
-        totalFollowers: updateUserDto.totalFollowers,
+    if (updateUserDto.password) {
+      updateUserDto.password = await hashPassword(updateUserDto.password);
+    }
+    return this.userRepository.update(updateUserDto, {
+      where: {
+        id,
       },
-      {
-        where: {
-          username,
-        },
-      },
-    );
+    });
   }
 
-  async deleteUser(username: string): Promise<void> {
-    const user = await this.getUser(username);
+  async deleteUser(id: string): Promise<void> {
+    const user = await this.getUser(id);
     await user.destroy();
   }
 }

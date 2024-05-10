@@ -7,7 +7,6 @@ import {
   Delete,
   UseGuards,
   Request,
-  Param,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,14 +18,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  createUser(@Body() createUserInfoDto: CreateUserDto) {
-    return this.usersService.createUser(createUserInfoDto);
+  createUser(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createUser(createUserDto);
   }
 
   @UseGuards(AuthGuard)
-  @Get(':username')
-  getUser(@Param('username') username: string) {
-    return this.usersService.getUser(username);
+  @Get()
+  getUser(@Request() req: any) {
+    return this.usersService.getUser(req.user.sub);
   }
 
   @UseGuards(AuthGuard)

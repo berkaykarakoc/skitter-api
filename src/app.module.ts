@@ -8,6 +8,8 @@ import { Skit } from './services/skits/entities/skit.entity';
 import { AuthModule } from './services/auth/auth.module';
 import { UsersModule } from './services/users/users.module';
 import { User } from './services/users/entities/user.entity';
+import { ProfilesModule } from './services/profiles/profiles.module';
+import { Profile } from './services/profiles/entities/profile.entity';
 
 @Module({
   imports: [
@@ -19,11 +21,12 @@ import { User } from './services/users/entities/user.entity';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Skit, User],
+      models: [Skit, User, Profile],
     }),
     SkitsModule,
     AuthModule,
     UsersModule,
+    ProfilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
