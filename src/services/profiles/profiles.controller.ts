@@ -22,8 +22,8 @@ export class ProfilesController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch(':userId')
-  updateProfileByUserId(
+  @Patch()
+  updateProfile(
     @Request() req: any,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {

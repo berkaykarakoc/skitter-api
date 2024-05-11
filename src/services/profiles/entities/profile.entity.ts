@@ -22,11 +22,8 @@ export class Profile extends Model {
   @Column('email')
   email: string;
 
-  @Column('first_name')
-  firstName: string;
-
-  @Column('last_name')
-  lastName: string;
+  @Column('name')
+  name: string;
 
   @Column('date_of_birth')
   dateOfBirth: DateDataType;

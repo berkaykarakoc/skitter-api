@@ -17,8 +17,7 @@ export class ProfilesService {
     const profile = await this.profileRepository.create({
       username: createProfileDto.username,
       email: createProfileDto.email,
-      firstName: createProfileDto.firstName,
-      lastName: createProfileDto.lastName,
+      name: createProfileDto.name,
       dateOfBirth: createProfileDto.dateOfBirth,
       country: createProfileDto.country,
       userId: createProfileDto.userId,

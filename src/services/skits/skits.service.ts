@@ -4,6 +4,7 @@ import { UpdateSkitDto } from './dto/update-skit.dto';
 import { Skit } from './entities/skit.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersService } from '../users/users.service';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class SkitsService {
@@ -28,14 +29,28 @@ export class SkitsService {
     return { skitId: skit.id };
   }
 
-  async getSkitsForUser(userId: string): Promise<Skit[]> {
+  async getSkits(userId: string): Promise<Skit[]> {
     const user = await this.usersService.getUser(userId);
     if (!user) {
       throw new NotFoundException(`User ${userId} not found`);
     }
     return this.skitsRepository.findAll({
       where: {
-        userId,
+        userId: {
+          [Op.eq]: userId,
+        },
+      },
+    });
+  }
+
+  async getSkitsByUsername(username: string): Promise<Skit[]> {
+    const user = await this.usersService.getUserByUsername(username);
+    if (!user) {
+      throw new NotFoundException(`User ${username} not found`);
+    }
+    return this.skitsRepository.findAll({
+      where: {
+        userId: { [Op.eq]: user.id },
       },
     });
   }
@@ -54,7 +69,9 @@ export class SkitsService {
   ): Promise<[affectedCount: number]> {
     return this.skitsRepository.update(updateSkitDto, {
       where: {
-        id,
+        id: {
+          [Op.eq]: id,
+        },
       },
     });
   }

@@ -20,14 +20,19 @@ export class SkitsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  createSkitForUser(@Body() createSkitDto: CreateSkitDto, @Request() req: any) {
+  createSkit(@Body() createSkitDto: CreateSkitDto, @Request() req: any) {
     return this.skitsService.createSkit(createSkitDto, req.user.sub);
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  getSkitsForUser(@Request() req: any) {
-    return this.skitsService.getSkitsForUser(req.user.sub);
+  getSkits(@Request() req: any) {
+    return this.skitsService.getSkits(req.user.sub);
+  }
+
+  @Get(':username')
+  getSkitsByUsername(@Param('username') username: string) {
+    return this.skitsService.getSkitsByUsername(username);
   }
 
   @Get(':id')
