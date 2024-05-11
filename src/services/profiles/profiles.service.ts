@@ -26,7 +26,7 @@ export class ProfilesService {
     return { id: profile.id };
   }
 
-  async getProfileByUserId(userId: string): Promise<Profile> {
+  async getProfile(userId: string): Promise<Profile> {
     const user = await this.profileRepository.findOne({
       where: { userId },
     });
@@ -36,7 +36,7 @@ export class ProfilesService {
     return user;
   }
 
-  async updateProfileByUserId(
+  async updateProfile(
     userId: string,
     updateProfileDto: UpdateProfileDto,
   ): Promise<[affectedCount: number]> {
@@ -45,5 +45,15 @@ export class ProfilesService {
         userId,
       },
     });
+  }
+
+  async getProfileByUsername(username: string): Promise<Profile> {
+    const user = await this.profileRepository.findOne({
+      where: { username },
+    });
+    if (!user) {
+      throw new NotFoundException(`User ${username} not found`);
+    }
+    return user;
   }
 }

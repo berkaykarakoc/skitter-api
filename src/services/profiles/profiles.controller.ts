@@ -1,21 +1,37 @@
-import { Controller, Get, Body, Patch, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ProfilesService } from './profiles.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('profiles')
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
-  @Get(':userId')
-  getProfileByUserId(@Param('userId') userId: string) {
-    return this.profilesService.getProfileByUserId(userId);
+  @UseGuards(AuthGuard)
+  @Get()
+  getProfile(@Request() req: any) {
+    return this.profilesService.getProfile(req.user.sub);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':userId')
   updateProfileByUserId(
-    @Param('userId') userId: string,
+    @Request() req: any,
     @Body() updateProfileDto: UpdateProfileDto,
   ) {
-    return this.profilesService.updateProfileByUserId(userId, updateProfileDto);
+    return this.profilesService.updateProfile(req.user.sub, updateProfileDto);
+  }
+
+  @Get(':username')
+  getProfileByUsername(@Param('username') username: string) {
+    return this.profilesService.getProfileByUsername(username);
   }
 }
