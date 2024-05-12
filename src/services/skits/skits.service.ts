@@ -24,6 +24,7 @@ export class SkitsService {
     }
     const skit = await this.skitsRepository.create({
       text: createSkitDto.text,
+      username: user.username,
       userId,
     });
     return { skitId: skit.id };
@@ -40,6 +41,7 @@ export class SkitsService {
           [Op.eq]: userId,
         },
       },
+      order: [['createdAt', 'DESC']],
     });
   }
 
@@ -52,6 +54,7 @@ export class SkitsService {
       where: {
         userId: { [Op.eq]: user.id },
       },
+      order: [['createdAt', 'DESC']],
     });
   }
 

@@ -4,6 +4,7 @@ import {
   Model,
   Default,
   ForeignKey,
+  Unique,
 } from 'sequelize-typescript';
 import { User } from 'src/services/users/entities/user.entity';
 
@@ -13,6 +14,10 @@ import { User } from 'src/services/users/entities/user.entity';
   underscored: true,
 })
 export class Skit extends Model {
+  @Unique
+  @Column('username')
+  username: string;
+
   @Column('text')
   text: string;
 
